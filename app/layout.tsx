@@ -26,10 +26,13 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" {...compId("RootLayout")}>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={rootBodyClass}>
         <Header />
         {children}
       </body>
     </html>
   );
 }
+
+// Presentation style helper (kept dynamic due to font variables)
+const rootBodyClass = `${geistSans.variable} ${geistMono.variable} antialiased`;

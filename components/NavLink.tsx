@@ -41,9 +41,7 @@ function ActiveLink(
   }
 ) {
   const { activeClassName, inactiveClassName = "", isActive, className, ...linkProps } = props;
-  const composed = [className, isActive ? activeClassName : inactiveClassName]
-    .filter(Boolean)
-    .join(" ");
+  const composed = composeNavLinkClass(className, isActive ? activeClassName : inactiveClassName);
 
   return (
     <Link
@@ -56,3 +54,7 @@ function ActiveLink(
     </Link>
   );
 }
+
+// Presentation helper for composing nav link classes
+const composeNavLinkClass = (base?: string, stateClass?: string) =>
+  [base, stateClass].filter(Boolean).join(" ");

@@ -111,5 +111,6 @@ export async function removeFromMyTeam(formData: FormData) {
 }
 
 export async function getMyTeamNames(): Promise<string[]> {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   return await readTeamCookie();
 }

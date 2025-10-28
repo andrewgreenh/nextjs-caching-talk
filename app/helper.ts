@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { request } from "node:http";
 
 export function getRenderTime() {
@@ -57,3 +58,58 @@ export const pokeApi = {
     });
   },
 };
+
+const TEAM_COOKIE = "my-team";
+const TEAM_MAX = 6;
+
+async function readTeamCookie(): Promise<string[]> {
+  const store = await cookies();
+  const raw = store.get(TEAM_COOKIE)?.value;
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((x) => typeof x === "string").map((x) => x.toLowerCase());
+    }
+  } catch {
+    // Ignore malformed cookie
+  }
+  return [];
+}
+
+async function writeTeamCookie(names: string[]) {
+  const store = await cookies();
+  store.set({
+    name: TEAM_COOKIE,
+    value: JSON.stringify(names),
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    secure: true,
+    maxAge: 60 * 60 * 24 * 7,
+  });
+}
+
+export async function addToMyTeam(formData: FormData) {
+  "use server";
+  const name = formData.get("name")?.toString().toLowerCase();
+  if (!name) return;
+  const current = await readTeamCookie();
+  if (current.includes(name)) return;
+  const next = current.slice(0, TEAM_MAX - 1);
+  next.unshift(name);
+  await writeTeamCookie(next);
+}
+
+export async function removeFromMyTeam(formData: FormData) {
+  "use server";
+  const name = formData.get("name")?.toString().toLowerCase();
+  if (!name) return;
+  const current = await readTeamCookie();
+  const next = current.filter((n) => n !== name);
+  await writeTeamCookie(next);
+}
+
+export async function getMyTeamNames(): Promise<string[]> {
+  return await readTeamCookie();
+}

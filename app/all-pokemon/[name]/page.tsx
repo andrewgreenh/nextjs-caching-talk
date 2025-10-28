@@ -1,4 +1,4 @@
-import { compId } from "@/app/helper";
+import { addToMyTeam, compId } from "@/app/helper";
 
 export default async function PokemonDetailPage() {
   return (
@@ -31,7 +31,7 @@ async function PokemonDetails() {
           #{id}
         </span>
       </h2>
-      <form method="post" className="mt-4">
+      <form action={addToMyTeam} className="mt-4">
         <input type="hidden" name="name" value={name} />
         <button
           type="submit"

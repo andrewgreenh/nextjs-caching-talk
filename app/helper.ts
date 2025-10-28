@@ -33,9 +33,17 @@ export type PokemonSummary = {
   url: string;
 };
 
+export type PokemonDetails = {
+  name: string;
+  sprite: string;
+  id: number;
+};
+
 export const pokeApi = {
-  async get151(): Promise<{ results: PokemonSummary[] }> {
-    return await httpGet("http://localhost:3001?url=https://pokeapi.co/api/v2/pokemon?limit=151");
+  async get151(): Promise<PokemonSummary[]> {
+    return await httpGet(
+      "http://localhost:3001?url=https://pokeapi.co/api/v2/pokemon?limit=151"
+    ).then((x) => x.results);
   },
   async getDetails(name: string) {
     return await httpGet(

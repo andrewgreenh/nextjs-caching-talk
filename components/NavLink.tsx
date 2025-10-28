@@ -11,8 +11,9 @@ type NavLinkProps = ComponentProps<typeof Link> & {
 };
 
 export function NavLink(props: PropsWithChildren<NavLinkProps>) {
+  const { exact, ...rest } = props;
   return (
-    <Suspense fallback={<ActiveLink {...props} isActive={false} />}>
+    <Suspense fallback={<ActiveLink {...rest} isActive={false} />}>
       <AutomaticActiveLink {...props} />
     </Suspense>
   );

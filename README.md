@@ -693,3 +693,8 @@ More questions? Let's chat!
 andreas.roth@esveo.com
 
 𝕏 @andrewgreenh
+
+Code and "slides"
+
+![QR-Code to https://github.com/andrewgreenh/nextjs-caching-talk](./public/qr-code.svg)<br>
+https://github.com/andrewgreenh/nextjs-caching-talk

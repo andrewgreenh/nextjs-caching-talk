@@ -322,6 +322,73 @@ Layout nesting flow:
 <br>
 <br>
 
+## What did we learn?
+
+- Use `cache` to make sure that a function is only executed once in a request (per arguments)
+- Very low risk. Can't leak data from other users, can't have stale data.
+- Can be used to pass around request context to other server components
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+```tsx
+import { cache } from "react";
+
+const getHandle = cache(() => ({} as any));
+
+function setRequestContext(ctx: { user: User }) {
+  const handle = getHandle();
+  Object.assign(handle, ctx);
+}
+
+function getRequestContext() {
+  return getHandle() as { user: User };
+}
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 # Second optimization: "use cache"
 
 ## Let's do it!
@@ -353,7 +420,8 @@ Layout nesting flow:
 
 - Can be added to data fetching functions
 - CAN be added to components, but affects all children
-  - You can still forward dynamic content via children
+- All arguments (and thus props) need to be simple data objects, no class instances, no functions
+- (Exceptions exist, more on that later)
 
 <br>
 <br>
@@ -387,7 +455,7 @@ Layout nesting flow:
   - concepts
     - staleTime (default: 5 minutes)
     - revalidate (default: 15 minutes)
-    - expire (default: 1 year)
+    - expire (default: 1 year) - this is new!
   - options: seconds, minutes, hours, days, wekks, max (see [docs](https://nextjs.org/docs/app/api-reference/functions/cacheLife))
 
 <br>
@@ -415,7 +483,7 @@ Layout nesting flow:
 
 ## Summary
 
-- Make as much data loading cached.
+- Make as much data loading cached as possibe
 - Pages will render statically as a result
 - The more dynamic your content is, the more complex your revalidation logic will be
 
@@ -444,7 +512,7 @@ Layout nesting flow:
 
 # Let's add user specific content!
 
-## Add to my team
+## Implement My Team!
 
 <br>
 <br>
@@ -471,8 +539,8 @@ Layout nesting flow:
 
 ## What we learned
 
-- dynamic APIs never within `"use cache"`
-- dynamic APIs always within `<Suspense>`
+- dynamic APIs can not be used within `"use cache"`
+- dynamic APIs always need to be within `<Suspense>`
 
 <br>
 <br>
@@ -524,8 +592,45 @@ Layout nesting flow:
 
 ## What we learned
 
-- Load dynamic data near the top. If possible, don't await.
-- cache below and pass dynamic data via props/children
+- Load dynamic data near the top. If possible, don't await
+- Cache whole components and pass "awaiting" components with props
+- If required, pass down promises, without awaiting, and await as deep as possible
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+# What if I'm still on Next.js 15
+
+- use fetch (`fetch(url, { next: { revalidate: 30, tags: ["tag"] }})`)
+  - Already deduplicated
+  - Can use the data cache (but no expiration time)
+- `cache(fn)` already exists for deduplication
+- `unstable_cache(fn, keyParts, options)` from next.js can be used instead of `"use cache"`
+- Page level settings can be used to control fully static pages.
+
+```tsx
+export const dynamic = "force-static";
+```
 
 <br>
 <br>
@@ -552,10 +657,11 @@ Layout nesting flow:
 
 # Summary
 
-- Dynamic at the speed of static
-- No longer full page decision
+- **_Dynamic at the speed of static_**
+- Dynamic vs Static is no longer a full page decision
 - Goal for us: Make as much static/cached as possible
 - --> Not always worth it.
+  - Adding use cache to a component that always directly returns "boring" JSX can be more costly, than just rendering it.
   - Internal app: Being up to date is much more important, invalidation can become tricky
   - E-Commerce: Being up to date is only rarely a must, performance is of utmost importance!
 
@@ -583,3 +689,7 @@ Layout nesting flow:
 <br>
 
 More questions? Let's chat!
+
+andreas.roth@esveo.com
+
+𝕏 @andrewgreenh

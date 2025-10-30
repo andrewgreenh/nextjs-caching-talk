@@ -67,6 +67,8 @@
 
 # What Sets Next.js Apart: A Deep Dive into Caching
 
+_Andreas Roth ・ esveo_
+
 <br>
 <br>
 <br>
@@ -354,7 +356,7 @@ Layout nesting flow:
 ```tsx
 import { cache } from "react";
 
-const getHandle = cache(() => ({} as any));
+const getHandle = cache(() => ({}) as any);
 
 function setRequestContext(ctx: { user: User }) {
   const handle = getHandle();

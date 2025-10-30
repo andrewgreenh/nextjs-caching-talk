@@ -2,13 +2,26 @@ import { compId, PokemonSummary } from "@/app/helper";
 import { NavLink } from "@/components/NavLink";
 import { ReactNode } from "react";
 
-export default async function AllPokemonLayout({ children }: { children: ReactNode }) {
+export default async function AllPokemonLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
-    <main {...compId("AllPokemonLayout")} className={allPokemonLayoutMainClass}>
-      <h1 className={allPokemonLayoutTitleClass}>All Pokémon</h1>
+    <main
+      {...compId("AllPokemonLayout")}
+      className={allPokemonLayoutMainClass}
+    >
+      <h1 className={allPokemonLayoutTitleClass}>
+        All Pokémon
+      </h1>
       <div className={allPokemonLayoutContentClass}>
         <AllPokemonSidebar />
-        <section className={allPokemonLayoutChildrenSectionClass}>{children}</section>
+        <section
+          className={allPokemonLayoutChildrenSectionClass}
+        >
+          {children}
+        </section>
       </div>
     </main>
   );
@@ -16,11 +29,17 @@ export default async function AllPokemonLayout({ children }: { children: ReactNo
 
 async function AllPokemonSidebar() {
   const list: PokemonSummary[] = [
-    { name: "squirtle", url: "https://pokeapi.co/api/v2/pokemon/7/" },
+    {
+      name: "squirtle",
+      url: "https://pokeapi.co/api/v2/pokemon/7/",
+    },
   ];
 
   return (
-    <aside {...compId("AllPokemonSidebar")} className={allPokemonSidebarClass}>
+    <aside
+      {...compId("AllPokemonSidebar")}
+      className={allPokemonSidebarClass}
+    >
       <ul className={allPokemonSidebarListClass}>
         {list.map((p) => (
           <li key={p.name}>
@@ -28,7 +47,9 @@ async function AllPokemonSidebar() {
               href={`/all-pokemon/${p.name.toLowerCase()}`}
               exact
               className={allPokemonNavLinkBaseClass}
-              inactiveClassName={allPokemonNavLinkInactiveClass}
+              inactiveClassName={
+                allPokemonNavLinkInactiveClass
+              }
               activeClassName={allPokemonNavLinkActiveClass}
             >
               {p.name}
@@ -41,13 +62,16 @@ async function AllPokemonSidebar() {
 }
 
 // Presentation style constants
-const allPokemonLayoutMainClass = "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8";
-const allPokemonLayoutTitleClass = "text-2xl font-bold mb-6";
+const allPokemonLayoutMainClass =
+  "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8";
+const allPokemonLayoutTitleClass =
+  "text-2xl font-bold mb-6";
 const allPokemonLayoutContentClass = "flex gap-6";
 const allPokemonLayoutChildrenSectionClass = "flex-1";
 const allPokemonSidebarClass =
   "w-56 shrink-0 border border-gray-200 dark:border-gray-800 rounded-lg h-[600px] overflow-auto";
-const allPokemonSidebarListClass = "divide-y divide-gray-100 dark:divide-gray-800 text-sm";
+const allPokemonSidebarListClass =
+  "divide-y divide-gray-100 dark:divide-gray-800 text-sm";
 const allPokemonNavLinkBaseClass =
   "block px-3 py-2 text-sm transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60";
 const allPokemonNavLinkInactiveClass =

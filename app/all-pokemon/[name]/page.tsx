@@ -13,17 +13,33 @@ async function PokemonDetails() {
   const name = "squirtle";
   const sprite = `	https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
   return (
-    <div {...compId("PokemonDetails")} className={pokemonDetailsWrapperClass}>
+    <div
+      {...compId("PokemonDetails")}
+      className={pokemonDetailsWrapperClass}
+    >
       <div className={pokemonDetailsImageWrapperClass}>
-        <img src={sprite} alt={name} className={pokemonDetailsImageClass} loading="lazy" />
+        <img
+          src={sprite}
+          alt={name}
+          className={pokemonDetailsImageClass}
+          loading="lazy"
+        />
       </div>
       <h2 className={pokemonDetailsTitleClass}>
         {name}
-        <span className={pokemonDetailsIdBadgeClass}>#{id}</span>
+        <span className={pokemonDetailsIdBadgeClass}>
+          #{id}
+        </span>
       </h2>
-      <form action={addToMyTeam} className={pokemonDetailsFormClass}>
+      <form
+        action={addToMyTeam}
+        className={pokemonDetailsFormClass}
+      >
         <input type="hidden" name="name" value={name} />
-        <button type="submit" className={pokemonDetailsButtonClass}>
+        <button
+          type="submit"
+          className={pokemonDetailsButtonClass}
+        >
           Add to my team
         </button>
       </form>
@@ -34,9 +50,12 @@ async function PokemonDetails() {
 // Presentation style constants
 const pokemonDetailsWrapperClass =
   "max-w-sm rounded-xl border border-gray-200 dark:border-gray-800 p-5 bg-white dark:bg-gray-900 shadow-sm";
-const pokemonDetailsImageWrapperClass = "flex items-center justify-center mb-4 h-32";
-const pokemonDetailsImageClass = "h-28 w-28 object-contain drop-shadow-md";
-const pokemonDetailsTitleClass = "text-xl font-bold capitalize mb-2 flex items-center gap-2";
+const pokemonDetailsImageWrapperClass =
+  "flex items-center justify-center mb-4 h-32";
+const pokemonDetailsImageClass =
+  "h-28 w-28 object-contain drop-shadow-md";
+const pokemonDetailsTitleClass =
+  "text-xl font-bold capitalize mb-2 flex items-center gap-2";
 const pokemonDetailsIdBadgeClass =
   "text-xs font-medium rounded bg-indigo-50 dark:bg-indigo-950 px-2 py-0.5 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-700";
 const pokemonDetailsFormClass = "mt-4";

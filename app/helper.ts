@@ -2,7 +2,9 @@ import { cookies } from "next/headers";
 import { request } from "node:http";
 
 export function getRenderTime() {
-  return Math.round(((performance.now() / 1000) % 100) * 10) / 10;
+  return (
+    Math.round(((performance.now() / 1000) % 100) * 10) / 10
+  );
 }
 
 export function compId(name: string) {
@@ -43,12 +45,12 @@ export type PokemonDetails = {
 export const pokeApi = {
   async get151(): Promise<PokemonSummary[]> {
     return await httpGet(
-      "http://localhost:3001?url=https://pokeapi.co/api/v2/pokemon?limit=151"
+      "http://localhost:3001?url=https://pokeapi.co/api/v2/pokemon?limit=151",
     ).then((x) => x.results);
   },
   async getDetails(name: string) {
     return await httpGet(
-      `http://localhost:3001?url=https://pokeapi.co/api/v2/pokemon/${name}`
+      `http://localhost:3001?url=https://pokeapi.co/api/v2/pokemon/${name}`,
     ).then((x: any) => {
       return {
         name: x.name as string,
@@ -69,7 +71,9 @@ async function readTeamCookie(): Promise<string[]> {
   try {
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed)) {
-      return parsed.filter((x) => typeof x === "string").map((x) => x.toLowerCase());
+      return parsed
+        .filter((x) => typeof x === "string")
+        .map((x) => x.toLowerCase());
     }
   } catch {
     // Ignore malformed cookie
@@ -92,7 +96,10 @@ async function writeTeamCookie(names: string[]) {
 
 export async function addToMyTeam(formData: FormData) {
   "use server";
-  const name = formData.get("name")?.toString().toLowerCase();
+  const name = formData
+    .get("name")
+    ?.toString()
+    .toLowerCase();
   if (!name) return;
   const current = await readTeamCookie();
   if (current.includes(name)) return;
@@ -103,7 +110,10 @@ export async function addToMyTeam(formData: FormData) {
 
 export async function removeFromMyTeam(formData: FormData) {
   "use server";
-  const name = formData.get("name")?.toString().toLowerCase();
+  const name = formData
+    .get("name")
+    ?.toString()
+    .toLowerCase();
   if (!name) return;
   const current = await readTeamCookie();
   const next = current.filter((n) => n !== name);

@@ -44,11 +44,13 @@ export type PokemonDetails = {
 
 export const pokeApi = {
   async get151(): Promise<PokemonSummary[]> {
+    "use cache";
     return await httpGet(
       "http://localhost:3001?url=https://pokeapi.co/api/v2/pokemon?limit=151",
     ).then((x) => x.results);
   },
-  async getDetails(name: string) {
+  getDetails: async (name: string) => {
+    "use cache";
     return await httpGet(
       `http://localhost:3001?url=https://pokeapi.co/api/v2/pokemon/${name}`,
     ).then((x: any) => {

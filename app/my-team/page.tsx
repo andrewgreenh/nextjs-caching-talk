@@ -1,26 +1,28 @@
 import {
   compId,
-  PokemonDetails,
+  getMyTeamNames,
+  pokeApi,
   removeFromMyTeam,
 } from "@/app/helper";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { Suspense } from "react";
 
 export default async function MyTeamPage() {
   return (
     <main {...compId("MyTeam")} className={myTeamMainClass}>
       <h1 className={myTeamTitleClass}>My Team</h1>
-      <MyTeamGrid />
+      <Suspense fallback={<LoadingSpinner />}>
+        <MyTeamGrid />
+      </Suspense>
     </main>
   );
 }
 
 async function MyTeamGrid() {
-  const details: PokemonDetails[] = [
-    {
-      id: 7,
-      name: "squirtle",
-      sprite: `	https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png`,
-    },
-  ];
+  const teamNames = await getMyTeamNames();
+  const details = await Promise.all(
+    teamNames.map(pokeApi.getDetails),
+  );
 
   return (
     <div

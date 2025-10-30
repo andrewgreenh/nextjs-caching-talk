@@ -1,6 +1,11 @@
-import { compId, PokemonSummary } from "@/app/helper";
+import {
+  compId,
+  getMyTeamNames,
+  pokeApi,
+} from "@/app/helper";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { NavLink } from "@/components/NavLink";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 
 export default async function AllPokemonLayout({
   children,
@@ -16,7 +21,9 @@ export default async function AllPokemonLayout({
         All Pokémon
       </h1>
       <div className={allPokemonLayoutContentClass}>
-        <AllPokemonSidebar />
+        <Suspense fallback={<LoadingSpinner />}>
+          <AllPokemonSidebar />
+        </Suspense>
         <section
           className={allPokemonLayoutChildrenSectionClass}
         >
@@ -28,12 +35,8 @@ export default async function AllPokemonLayout({
 }
 
 async function AllPokemonSidebar() {
-  const list: PokemonSummary[] = [
-    {
-      name: "squirtle",
-      url: "https://pokeapi.co/api/v2/pokemon/7/",
-    },
-  ];
+  const list = await pokeApi.get151();
+  const teamNamesPromise = getMyTeamNames();
 
   return (
     <aside
@@ -53,11 +56,40 @@ async function AllPokemonSidebar() {
               activeClassName={allPokemonNavLinkActiveClass}
             >
               {p.name}
+
+              <Suspense>
+                <TeamBadge
+                  name={p.name}
+                  teamNamesPromise={teamNamesPromise}
+                />
+              </Suspense>
             </NavLink>
           </li>
         ))}
       </ul>
     </aside>
+  );
+}
+
+async function TeamBadge(props: {
+  name: string;
+  teamNamesPromise: Promise<string[]>;
+}) {
+  const teamNames = await props.teamNamesPromise;
+  const shouldShowBadge = teamNames.includes(props.name);
+
+  if (!shouldShowBadge) {
+    return null;
+  }
+
+  return (
+    <span
+      className="ml-2 inline-block bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full"
+      title="Part of my team"
+      {...compId("TeamBadge")}
+    >
+      🏆
+    </span>
   );
 }
 

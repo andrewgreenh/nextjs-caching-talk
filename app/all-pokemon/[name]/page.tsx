@@ -1,17 +1,36 @@
-import { addToMyTeam, compId } from "@/app/helper";
+import { addToMyTeam, compId, pokeApi } from "@/app/helper";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-export default async function PokemonDetailPage() {
+// export const generateStaticParams() {
+
+// }
+
+export default async function PokemonDetailPage(props: {
+  params: Promise<{ name: string }>;
+}) {
   return (
     <div {...compId("PokemonDetailPage")}>
-      <PokemonDetails />
+      <Suspense fallback={<LoadingSpinner />}>
+        <PokemonDetails params={props.params} />
+      </Suspense>
     </div>
   );
 }
 
-async function PokemonDetails() {
-  const id = 7;
-  const name = "squirtle";
-  const sprite = `	https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+async function PokemonDetails(props: {
+  params: Promise<{ name: string }>;
+}) {
+  const name = (await props.params).name;
+  const allPokemon = await pokeApi.get151();
+  const isPokemon = allPokemon.some((p) => p.name === name);
+  if (!isPokemon) {
+    notFound();
+  }
+  const details = await pokeApi.getDetails(name);
+  const id = details.id;
+  const sprite = details.sprite;
   return (
     <div
       {...compId("PokemonDetails")}
